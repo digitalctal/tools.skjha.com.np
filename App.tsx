@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo, useEffect } from 'react';
 import Layout from './components/Layout.tsx';
 import ToolCard from './components/ToolCard.tsx';
@@ -16,11 +15,20 @@ import PasswordGenerator from './components/tools/PasswordGenerator.tsx';
 import TemperatureConverter from './components/tools/TemperatureConverter.tsx';
 import NepaliPatro from './components/tools/NepaliPatro.tsx';
 
+/**
+ * Main App Component
+ * Manages:
+ * - Tool selection via hash-based routing
+ * - Search functionality
+ * - Category filtering
+ * - Tool rendering
+ */
 const App: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedToolId, setSelectedToolId] = useState<string | null>(null);
   const [activeCategory, setActiveCategory] = useState<Category | 'All'>('All');
 
+  // Handle hash-based routing
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.replace('#/tool/', '');
@@ -30,17 +38,21 @@ const App: React.FC = () => {
         setSelectedToolId(null);
       }
     };
+    
     window.addEventListener('hashchange', handleHashChange);
     handleHashChange();
+    
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
 
+  // Handle tool click - updates URL hash
   const handleToolClick = (id: string) => {
     window.location.hash = `#/tool/${id}`;
     setSelectedToolId(id);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  // Handle home click - resets state
   const handleHomeClick = () => {
     window.location.hash = '';
     setSelectedToolId(null);
@@ -48,47 +60,58 @@ const App: React.FC = () => {
     setActiveCategory('All');
   };
 
+  // Filter tools based on search and category
   const filteredTools = useMemo(() => {
     return TOOLS.filter(tool => {
-      const matchesSearch = tool.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                            tool.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+      const matchesSearch = 
+        tool.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+        tool.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
       const matchesCategory = activeCategory === 'All' || tool.category === activeCategory;
       return matchesSearch && matchesCategory;
     });
   }, [searchQuery, activeCategory]);
 
+  // Get selected and featured tools
   const selectedTool = TOOLS.find(t => t.id === selectedToolId);
-  const featuredTool = TOOLS.find(t => t.id === 'nepali-patro') || TOOLS[0]; 
+  const featuredTool = TOOLS.find(t => t.id === 'nepali-patro') || TOOLS[0];
 
+  // Render the appropriate tool component
   const renderTool = () => {
     if (!selectedToolId) return null;
-    switch (selectedToolId) {
-      case 'word-counter': return <WordCounter />;
-      case 'json-formatter': return <JSONFormatter />;
-      case 'bmi-calculator': return <BMIForm />;
-      case 'case-converter': return <CaseConverter />;
-      case 'password-generator': return <PasswordGenerator />;
-      case 'temp-converter': return <TemperatureConverter />;
-      case 'nepali-patro': return <NepaliPatro />;
-      default:
-        return (
-          <div className="bg-white p-12 rounded-[2.5rem] border-4 border-black text-center space-y-8">
-            <div className="inline-flex p-6 bg-yellow-100 text-yellow-700 rounded-full">
-               <i className="fa-solid fa-triangle-exclamation text-4xl"></i>
-            </div>
-            <h2 className="text-3xl font-black">Feature Coming Soon</h2>
-            <p className="text-slate-500 max-w-sm mx-auto font-bold text-lg">
-              Our engineering team is currently building the {selectedTool?.name || 'requested tool'}.
-            </p>
-            <button 
-              onClick={handleHomeClick}
-              className="btn-brand"
-            >
-              Back to Directory
-            </button>
-          </div>
-        );
+    
+    const toolComponents: Record<string, React.ReactNode> = {
+      'word-counter': <WordCounter />,
+      'json-formatter': <JSONFormatter />,
+      'bmi-calculator': <BMIForm />,
+      'case-converter': <CaseConverter />,
+      'password-generator': <PasswordGenerator />,
+      'temp-converter': <TemperatureConverter />,
+      'nepali-patro': <NepaliPatro />
+    };
+
+    if (toolComponents[selectedToolId]) {
+      return toolComponents[selectedToolId];
     }
+
+    // Fallback for tools not yet implemented
+    return (
+      <div className="bg-white p-12 rounded-[2.5rem] border-4 border-black text-center space-y-8 dark:bg-[#111] dark:border-white">
+        <div className="inline-flex p-6 bg-yellow-100 text-yellow-700 rounded-full dark:bg-yellow-900/30 dark:text-yellow-400">
+           <i className="fa-solid fa-triangle-exclamation text-4xl"></i>
+        </div>
+        <h2 className="text-3xl font-black dark:text-white">Feature Coming Soon</h2>
+        <p className="text-slate-500 max-w-sm mx-auto font-bold text-lg dark:text-slate-400">
+          Our engineering team is currently building the {selectedTool?.name || 'requested tool'}.
+        </p>
+        <button 
+          onClick={handleHomeClick}
+          className="btn-brand"
+        >
+          <i className="fa-solid fa-arrow-left mr-3"></i>
+          Back to Directory
+        </button>
+      </div>
+    );
   };
 
   return (
@@ -97,10 +120,15 @@ const App: React.FC = () => {
       setSearchQuery={setSearchQuery} 
       onHomeClick={handleHomeClick}
     >
+      {/* Tool Detail View */}
       {selectedToolId && selectedTool ? (
         <div className="max-w-5xl mx-auto px-4">
+          {/* Back Button & Category Badge */}
           <div className="flex items-center justify-between mb-12">
-            <button onClick={handleHomeClick} className="flex items-center text-lg font-black text-black dark:text-white hover:text-[#28a745] transition-all group">
+            <button 
+              onClick={handleHomeClick} 
+              className="flex items-center text-lg font-black text-black dark:text-white hover:text-[#28a745] transition-all group"
+            >
                <i className="fa-solid fa-arrow-left mr-3 group-hover:-translate-x-2 transition-transform"></i> 
                <span>Back to Directory</span>
             </button>
@@ -109,6 +137,7 @@ const App: React.FC = () => {
             </div>
           </div>
 
+          {/* Tool Header */}
           <div className="mb-16">
             <div className="flex flex-col md:flex-row items-center md:items-start space-y-6 md:space-y-0 md:space-x-8">
               <div className="w-24 h-24 bg-black text-white rounded-3xl flex items-center justify-center shadow-2xl shadow-[#28a745]/10 flex-shrink-0">
@@ -121,14 +150,18 @@ const App: React.FC = () => {
             </div>
           </div>
 
+          {/* Ads */}
           <AdPlaceholder type="banner" label="Header Ad" />
 
+          {/* Tool Content */}
           <div className="card-minimal mb-16 dark:bg-[#111]">
             {renderTool()}
           </div>
 
+          {/* More Ads */}
           <AdPlaceholder type="banner" label="Footer Ad" />
           
+          {/* Suggested Tools */}
           <div className="mt-24">
             <div className="flex items-center space-x-4 mb-10">
                <i className="fa-solid fa-bolt text-[#28a745] text-2xl"></i>
@@ -136,12 +169,19 @@ const App: React.FC = () => {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
               {TOOLS.filter(t => t.id !== selectedToolId).slice(0, 3).map(tool => (
-                <ToolCard key={tool.id} tool={tool} onClick={handleToolClick} />
+                <ToolCard 
+                  key={tool.id} 
+                  tool={tool} 
+                  onClick={handleToolClick}
+                  showBadge={tool.id === 'preeti-to-unicode' || tool.id === 'unicode-to-preeti'}
+                  badgeType="new"
+                />
               ))}
             </div>
           </div>
         </div>
       ) : (
+        /* Home/Directory View */
         <>
           {/* Hero Section */}
           <section className="text-center py-20 md:py-32 animate-in fade-in duration-1000">
@@ -158,6 +198,7 @@ const App: React.FC = () => {
               Built for developers, designers, and students in Nepal and beyond.
             </p>
             
+            {/* Hero Search */}
             <div className="max-w-3xl mx-auto relative group mb-24 px-4">
               <div className="absolute inset-y-0 left-12 flex items-center pointer-events-none">
                 <i className="fa-solid fa-magnifying-glass text-slate-300 text-xl group-focus-within:text-[#28a745] transition-colors"></i>
@@ -168,15 +209,24 @@ const App: React.FC = () => {
                 placeholder="Search 200+ free utilities..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                aria-label="Search tools"
               />
             </div>
           </section>
 
-          {!searchQuery && <FeaturedTool tool={featuredTool} onSelect={handleToolClick} />}
+          {/* Featured Tool */}
+          {!searchQuery && (
+            <FeaturedTool 
+              tool={featuredTool} 
+              onSelect={handleToolClick} 
+              autoPlay={false}
+            />
+          )}
 
+          {/* Banner Ad */}
           <AdPlaceholder type="banner" label="Home Banner" />
 
-          {/* Categories Grid */}
+          {/* Category Filter */}
           <div className="flex overflow-x-auto pb-10 mb-16 space-x-4 no-scrollbar px-4">
             {(['All', ...Object.values(Category)] as const).map((cat) => (
               <button
@@ -198,21 +248,37 @@ const App: React.FC = () => {
             {filteredTools.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10 mb-32">
                 {filteredTools.map((tool) => (
-                  <ToolCard key={tool.id} tool={tool} onClick={handleToolClick} />
+                  <ToolCard 
+                    key={tool.id} 
+                    tool={tool} 
+                    onClick={handleToolClick}
+                    showBadge={['nepali-patro', 'preeti-to-unicode', 'unicode-to-preeti'].includes(tool.id)}
+                    badgeType={tool.id === 'nepali-patro' ? 'popular' : 'new'}
+                  />
                 ))}
               </div>
             ) : (
+              /* No Results State */
               <div className="text-center py-40 bg-slate-50 dark:bg-[#0a0a0a] rounded-[4rem] border-4 border-dashed border-slate-200 dark:border-slate-800 mb-32">
                  <div className="w-32 h-32 bg-white dark:bg-[#111] rounded-full flex items-center justify-center mx-auto mb-10 shadow-xl">
                    <i className="fa-solid fa-search-minus text-5xl text-slate-200"></i>
                  </div>
                  <h3 className="text-4xl font-black mb-4 dark:text-white">No tools found</h3>
                  <p className="text-slate-400 text-xl font-bold">Try different keywords or browse categories.</p>
-                 <button onClick={() => setSearchQuery('')} className="mt-12 text-[#28a745] text-2xl font-black hover:underline underline-offset-8 decoration-4">Clear All Filters</button>
+                 <button 
+                  onClick={() => {
+                    setSearchQuery('');
+                    setActiveCategory('All');
+                  }} 
+                  className="mt-12 text-[#28a745] text-2xl font-black hover:underline underline-offset-8 decoration-4"
+                >
+                  Clear All Filters
+                </button>
               </div>
             )}
           </div>
 
+          {/* CTA Section */}
           <div className="bg-black rounded-[4rem] p-16 md:p-24 text-white relative overflow-hidden mb-32 mx-4">
              <div className="relative z-10 grid md:grid-cols-2 gap-20 items-center">
                <div>
@@ -243,3 +309,4 @@ const App: React.FC = () => {
 };
 
 export default App;
+
