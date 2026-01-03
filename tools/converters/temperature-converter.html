@@ -1,0 +1,193 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Temperature Converter - Celsius, Fahrenheit, Kelvin | S.K. Jha Tools</title>
+    <meta name="description" content="Quickly convert temperatures between Celsius, Fahrenheit, and Kelvin. Professional, free online tool with instant calculations.">
+    
+    <!-- External Frameworks -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { --primary: #2563eb; --slate-50: #f8fafc; --slate-900: #0f172a; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--slate-50); color: var(--slate-900); }
+        .glass-header { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 1000; }
+        .tool-card { background: white; border-radius: 2rem; border: 1px solid #e2e8f0; padding: 2.5rem; box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1); }
+        .result-box { background: #f1f5f9; border-radius: 1.5rem; padding: 1.5rem; text-align: center; border: 1px solid #e2e8f0; }
+        .ad-box { background: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 1rem; color: #94a3b8; display: flex; align-items: center; justify-content: center; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.1em; font-weight: bold; margin: 2rem 0; height: 100px; }
+        .fw-black { font-weight: 800; }
+        footer { background: var(--slate-900); color: #94a3b8; padding: 4rem 0; margin-top: 5rem; }
+        .hover-lift:hover { transform: translateY(-3px); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1); transition: all 0.2s; }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="glass-header py-3">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a href="/" class="text-decoration-none d-flex align-items-center">
+                <div class="bg-primary text-white p-2 rounded-3 me-2">
+                    <i class="fas fa-thermometer-half"></i>
+                </div>
+                <div>
+                    <h1 class="h5 mb-0 fw-bold text-dark">S.K. Jha <span class="text-primary">Tools</span></h1>
+                    <small class="text-muted">tools.skjha.com.np</small>
+                </div>
+            </a>
+            <a href="/" class="btn btn-dark rounded-pill px-4 fw-bold">Home</a>
+        </div>
+    </header>
+
+    <main class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                
+                <div class="mb-5 text-center text-md-start">
+                    <h2 class="display-4 fw-black mb-3">Temperature Converter</h2>
+                    <p class="text-muted fs-5">Fast and accurate temperature conversion for scientific and daily use.</p>
+                </div>
+
+                <!-- Ad Placeholder -->
+                <div class="ad-box">Header Advertisement</div>
+
+                <div class="tool-card">
+                    <div class="row g-4 mb-5">
+                        <div class="col-md-7">
+                            <label class="form-label fw-bold">Value to Convert</label>
+                            <input type="number" id="valIn" class="form-control form-control-lg rounded-4 border-2 p-3 fw-bold" value="0">
+                        </div>
+                        <div class="col-md-5">
+                            <label class="form-label fw-bold">Source Unit</label>
+                            <select id="unitIn" class="form-select form-select-lg rounded-4 border-2 p-3 fw-bold">
+                                <option value="c">Celsius (°C)</option>
+                                <option value="f">Fahrenheit (°F)</option>
+                                <option value="k">Kelvin (K)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row g-4 mb-5">
+                        <div class="col-md-4">
+                            <div class="result-box hover-lift">
+                                <div class="text-uppercase small fw-bold text-muted mb-1">Celsius</div>
+                                <div class="h2 fw-black mb-0"><span id="out-c">0</span><span class="text-primary small ms-1">°C</span></div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="result-box hover-lift">
+                                <div class="text-uppercase small fw-bold text-muted mb-1">Fahrenheit</div>
+                                <div class="h2 fw-black mb-0"><span id="out-f">32</span><span class="text-primary small ms-1">°F</span></div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="result-box hover-lift">
+                                <div class="text-uppercase small fw-bold text-muted mb-1">Kelvin</div>
+                                <div class="h2 fw-black mb-0"><span id="out-k">273.15</span><span class="text-primary small ms-1">K</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <button id="clearBtn" class="btn btn-outline-danger rounded-pill px-5 py-2 fw-bold">
+                            <i class="fas fa-redo me-2"></i>Reset Input
+                        </button>
+                    </div>
+
+                    <!-- Ad Placeholder -->
+                    <div class="ad-box mt-5">In-Content Ad</div>
+
+                    <div class="mt-5 pt-4 border-top">
+                        <h4 class="fw-bold mb-4">Unit Formulas</h4>
+                        <div class="table-responsive">
+                            <table class="table table-borderless bg-light rounded-4">
+                                <thead class="border-bottom">
+                                    <tr>
+                                        <th class="p-3">Conversion</th>
+                                        <th class="p-3">Formula</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="p-3">Celsius to Fahrenheit</td>
+                                        <td class="p-3 font-monospace">°F = (°C × 9/5) + 32</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3">Celsius to Kelvin</td>
+                                        <td class="p-3 font-monospace">K = °C + 273.15</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3">Fahrenheit to Celsius</td>
+                                        <td class="p-3 font-monospace">°C = (°F - 32) × 5/9</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-5">
+                    <h4 class="fw-bold mb-4">Common Tools</h4>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <a href="/#/tool/unit-converter" class="d-block p-4 bg-white border rounded-4 text-decoration-none text-dark hover-lift">
+                                <i class="fas fa-ruler text-primary mb-2"></i>
+                                <div class="fw-bold">Unit Converter</div>
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="/#/tool/bmi-calculator" class="d-block p-4 bg-white border rounded-4 text-decoration-none text-dark hover-lift">
+                                <i class="fas fa-weight text-primary mb-2"></i>
+                                <div class="fw-bold">BMI Calculator</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container text-center">
+            <h3 class="text-white fw-bold mb-4">S.K. Jha Tools</h3>
+            <p class="mb-5">Reliable, fast, and completely free web utilities.</p>
+            <div class="opacity-50 small">
+                © 2024 S.K. Jha Tools. Built with <i class="fas fa-heart text-danger"></i> in Nepal 🇳🇵
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const valIn = document.getElementById('valIn');
+        const unitIn = document.getElementById('unitIn');
+        const outC = document.getElementById('out-c');
+        const outF = document.getElementById('out-f');
+        const outK = document.getElementById('out-k');
+        const clearBtn = document.getElementById('clearBtn');
+
+        function calc() {
+            const v = parseFloat(valIn.value);
+            const u = unitIn.value;
+            if (isNaN(v)) return;
+
+            let c = 0;
+            if (u === 'c') c = v;
+            else if (u === 'f') c = (v - 32) * 5/9;
+            else if (u === 'k') c = v - 273.15;
+
+            outC.innerText = c.toFixed(2);
+            outF.innerText = (c * 9/5 + 32).toFixed(2);
+            outK.innerText = (c + 273.15).toFixed(2);
+        }
+
+        valIn.addEventListener('input', calc);
+        unitIn.addEventListener('change', calc);
+        clearBtn.addEventListener('click', () => { valIn.value = 0; calc(); });
+        calc();
+    </script>
+</body>
+</html>
