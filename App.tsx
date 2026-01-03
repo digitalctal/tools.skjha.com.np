@@ -1,20 +1,20 @@
 
 import React, { useState, useMemo, useEffect } from 'react';
-import Layout from './components/Layout';
-import ToolCard from './components/ToolCard';
-import AdPlaceholder from './components/AdPlaceholder';
-import FeaturedTool from './components/FeaturedTool';
-import { TOOLS } from './constants';
-import { Category, Tool } from './types';
+import Layout from './components/Layout.tsx';
+import ToolCard from './components/ToolCard.tsx';
+import AdPlaceholder from './components/AdPlaceholder.tsx';
+import FeaturedTool from './components/FeaturedTool.tsx';
+import { TOOLS } from './constants.tsx';
+import { Category } from './types.ts';
 
 // Tool Components
-import WordCounter from './components/tools/WordCounter';
-import JSONFormatter from './components/tools/JSONFormatter';
-import BMIForm from './components/tools/BMIForm';
-import CaseConverter from './components/tools/CaseConverter';
-import PasswordGenerator from './components/tools/PasswordGenerator';
-import TemperatureConverter from './components/tools/TemperatureConverter';
-import NepaliPatro from './components/tools/NepaliPatro';
+import WordCounter from './components/tools/WordCounter.tsx';
+import JSONFormatter from './components/tools/JSONFormatter.tsx';
+import BMIForm from './components/tools/BMIForm.tsx';
+import CaseConverter from './components/tools/CaseConverter.tsx';
+import PasswordGenerator from './components/tools/PasswordGenerator.tsx';
+import TemperatureConverter from './components/tools/TemperatureConverter.tsx';
+import NepaliPatro from './components/tools/NepaliPatro.tsx';
 
 const App: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -24,7 +24,7 @@ const App: React.FC = () => {
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.replace('#/tool/', '');
-      if (hash && hash !== '#/') {
+      if (hash && hash !== '#' && hash !== '#/') {
         setSelectedToolId(hash);
       } else {
         setSelectedToolId(null);
@@ -100,7 +100,7 @@ const App: React.FC = () => {
       {selectedToolId && selectedTool ? (
         <div className="max-w-5xl mx-auto px-4">
           <div className="flex items-center justify-between mb-12">
-            <button onClick={handleHomeClick} className="flex items-center text-lg font-black text-black hover:text-[#28a745] transition-all group">
+            <button onClick={handleHomeClick} className="flex items-center text-lg font-black text-black dark:text-white hover:text-[#28a745] transition-all group">
                <i className="fa-solid fa-arrow-left mr-3 group-hover:-translate-x-2 transition-transform"></i> 
                <span>Back to Directory</span>
             </button>
@@ -115,15 +115,15 @@ const App: React.FC = () => {
                 {selectedTool.icon}
               </div>
               <div className="text-center md:text-left">
-                <h2 className="text-5xl md:text-6xl font-black mb-4 tracking-tighter">{selectedTool.name}</h2>
-                <p className="text-slate-500 text-xl font-medium leading-relaxed max-w-3xl">{selectedTool.description}</p>
+                <h2 className="text-5xl md:text-6xl font-black mb-4 tracking-tighter dark:text-white">{selectedTool.name}</h2>
+                <p className="text-slate-500 dark:text-slate-400 text-xl font-medium leading-relaxed max-w-3xl">{selectedTool.description}</p>
               </div>
             </div>
           </div>
 
           <AdPlaceholder type="banner" label="Header Ad" />
 
-          <div className="card-minimal mb-16">
+          <div className="card-minimal mb-16 dark:bg-[#111]">
             {renderTool()}
           </div>
 
@@ -132,7 +132,7 @@ const App: React.FC = () => {
           <div className="mt-24">
             <div className="flex items-center space-x-4 mb-10">
                <i className="fa-solid fa-bolt text-[#28a745] text-2xl"></i>
-               <h3 className="text-3xl font-black tracking-tight uppercase">Suggested Tools</h3>
+               <h3 className="text-3xl font-black tracking-tight uppercase dark:text-white">Suggested Tools</h3>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
               {TOOLS.filter(t => t.id !== selectedToolId).slice(0, 3).map(tool => (
@@ -149,22 +149,22 @@ const App: React.FC = () => {
               <span className="text-[#28a745]"><i className="fa-solid fa-flag"></i></span> 
               <span>Nepal's Premium Tool Collection</span>
             </div>
-            <h1 className="display-large font-black text-black mb-10 tracking-tighter">
+            <h1 className="display-large font-black text-black dark:text-white mb-10 tracking-tighter">
               Precision Tools <br className="hidden md:block" />
               For The <span className="text-[#28a745]">Modern Creator.</span>
             </h1>
-            <p className="text-slate-500 text-xl md:text-2xl max-w-4xl mx-auto leading-relaxed mb-16 font-medium">
+            <p className="text-slate-500 dark:text-slate-400 text-xl md:text-2xl max-w-4xl mx-auto leading-relaxed mb-16 font-medium">
               Free, high-performance web utilities optimized for speed and total privacy. 
               Built for developers, designers, and students in Nepal and beyond.
             </p>
             
-            <div className="max-w-3xl mx-auto relative group mb-24">
-              <div className="absolute inset-y-0 left-8 flex items-center pointer-events-none">
+            <div className="max-w-3xl mx-auto relative group mb-24 px-4">
+              <div className="absolute inset-y-0 left-12 flex items-center pointer-events-none">
                 <i className="fa-solid fa-magnifying-glass text-slate-300 text-xl group-focus-within:text-[#28a745] transition-colors"></i>
               </div>
               <input
                 type="text"
-                className="w-full pl-20 pr-10 py-7 bg-white border-4 border-slate-100 rounded-[2rem] text-2xl font-bold shadow-2xl shadow-slate-200/40 outline-none focus:border-[#28a745] transition-all search-focus-ring"
+                className="w-full pl-20 pr-10 py-7 bg-white dark:bg-[#111] dark:text-white border-4 border-slate-100 dark:border-slate-800 rounded-[2rem] text-2xl font-bold shadow-2xl shadow-slate-200/40 outline-none focus:border-[#28a745] transition-all search-focus-ring"
                 placeholder="Search 200+ free utilities..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -177,15 +177,15 @@ const App: React.FC = () => {
           <AdPlaceholder type="banner" label="Home Banner" />
 
           {/* Categories Grid */}
-          <div className="flex overflow-x-auto pb-10 mb-16 space-x-4 no-scrollbar">
+          <div className="flex overflow-x-auto pb-10 mb-16 space-x-4 no-scrollbar px-4">
             {(['All', ...Object.values(Category)] as const).map((cat) => (
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat as any)}
                 className={`flex-shrink-0 px-10 py-4 rounded-2xl text-lg font-black tracking-tight transition-all border-2 ${
                   activeCategory === cat 
-                  ? 'bg-black text-white border-black shadow-2xl shadow-black/20' 
-                  : 'bg-white border-slate-100 text-slate-500 hover:border-[#28a745] hover:text-[#28a745]'
+                  ? 'bg-black text-white border-black dark:border-[#28a745] dark:bg-[#28a745] shadow-2xl' 
+                  : 'bg-white dark:bg-[#111] border-slate-100 dark:border-slate-800 text-slate-500 hover:border-[#28a745] hover:text-[#28a745]'
                 }`}
               >
                 {cat}
@@ -194,24 +194,26 @@ const App: React.FC = () => {
           </div>
 
           {/* Tools Grid */}
-          {filteredTools.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10 mb-32">
-              {filteredTools.map((tool) => (
-                <ToolCard key={tool.id} tool={tool} onClick={handleToolClick} />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-40 bg-slate-50 rounded-[4rem] border-4 border-dashed border-slate-200 mb-32">
-               <div className="w-32 h-32 bg-white rounded-full flex items-center justify-center mx-auto mb-10 shadow-xl">
-                 <i className="fa-solid fa-search-minus text-5xl text-slate-200"></i>
-               </div>
-               <h3 className="text-4xl font-black mb-4">No tools found</h3>
-               <p className="text-slate-400 text-xl font-bold">Try different keywords or browse categories.</p>
-               <button onClick={() => setSearchQuery('')} className="mt-12 text-[#28a745] text-2xl font-black hover:underline underline-offset-8 decoration-4">Clear All Filters</button>
-            </div>
-          )}
+          <div className="px-4">
+            {filteredTools.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10 mb-32">
+                {filteredTools.map((tool) => (
+                  <ToolCard key={tool.id} tool={tool} onClick={handleToolClick} />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-40 bg-slate-50 dark:bg-[#0a0a0a] rounded-[4rem] border-4 border-dashed border-slate-200 dark:border-slate-800 mb-32">
+                 <div className="w-32 h-32 bg-white dark:bg-[#111] rounded-full flex items-center justify-center mx-auto mb-10 shadow-xl">
+                   <i className="fa-solid fa-search-minus text-5xl text-slate-200"></i>
+                 </div>
+                 <h3 className="text-4xl font-black mb-4 dark:text-white">No tools found</h3>
+                 <p className="text-slate-400 text-xl font-bold">Try different keywords or browse categories.</p>
+                 <button onClick={() => setSearchQuery('')} className="mt-12 text-[#28a745] text-2xl font-black hover:underline underline-offset-8 decoration-4">Clear All Filters</button>
+              </div>
+            )}
+          </div>
 
-          <div className="bg-black rounded-[4rem] p-16 md:p-24 text-white relative overflow-hidden mb-32">
+          <div className="bg-black rounded-[4rem] p-16 md:p-24 text-white relative overflow-hidden mb-32 mx-4">
              <div className="relative z-10 grid md:grid-cols-2 gap-20 items-center">
                <div>
                   <h2 className="text-5xl md:text-6xl font-black mb-8 leading-tight">Can't find it?<br/><span className="text-[#28a745]">We'll build it.</span></h2>
